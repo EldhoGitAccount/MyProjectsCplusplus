@@ -1,0 +1,54 @@
+// Single resposniblity solid design principle
+#include <iostream>
+#include <string>
+#include <cstdio>
+#include <vector>
+#include <fstream>
+#include <boost/lexical_cast.hpp>
+
+using namespace std;
+using namespace boost;
+class Journal {
+private:
+       string title;
+       
+public:
+      vector<string> entries{};
+      Journal(const string& title):title(title) {}
+      void addEntry(const string& entry) {
+          static int count = 1;
+          entries.push_back(lexical_cast<string>(count++) + ":" + entry);
+      }
+      void save(const string& fileName) {
+          ofstream ofs(fileName);
+          for (auto & e:entries) 
+          ofs << e <<endl;
+      }
+      void printEntries() {
+          for(auto & e:entries)
+          cout<<e<<endl;
+      }
+};
+
+//Moving the saving of entries of diary to another class beacuse of single responsiblity of class Journal
+class PersistenceManager {
+public:
+      static void saveEntry(const Journal& corfjournal ,const string& corffileName) {
+          ofstream ofs(corffileName);
+          for(auto & e:corfjournal.entries)
+          ofs<< e <<endl;
+      }
+};
+    
+int main()
+{
+  Journal oJournal("Diary");
+  oJournal.addEntry("I had food");
+  oJournal.addEntry("I slept");
+  //journal.save("diary.txt");
+  PersistenceManager oPerManager;
+  oPerManager.saveEntry(oJournal, "Diary.txt");
+  oJournal.printEntries();
+  
+  return 0;
+}
