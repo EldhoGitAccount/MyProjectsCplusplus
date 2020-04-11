@@ -1,0 +1,107 @@
+// Example program to demonstrate vector operations using c++11 features
+#include <iostream>
+#include <string>
+#include <memory>
+#include <vector>
+#include <algorithm>
+#include <functional>
+
+using namespace std;
+class Link {
+private:
+       int m_searchElement{0};
+public:
+      using m_linkIdList = vector<pair<int,int>>;
+      Link(){}
+      Link(int element):m_searchElement(element){};
+      Link(const Link& num) {
+          m_searchElement = num.m_searchElement;
+      }
+      Link & operator=(const Link& num) {
+             m_searchElement = num.m_searchElement;
+             return *this;
+      }
+      bool bSearchSort( shared_ptr<Link> uPlink, m_linkIdList & List);
+      auto vFillList()->m_linkIdList;
+      void vPrintList(const m_linkIdList & List);
+      auto vSortList(m_linkIdList & List)->m_linkIdList;
+      void vSearchList(int searchNum, m_linkIdList & List);
+      inline auto GetSearchElement()->int {
+          return m_searchElement;
+      }
+      function<int (m_linkIdList & , int )> SortAndSearch = 
+          [](m_linkIdList & List, int searchNum) {
+           sort(List.begin(), List.end());
+           auto it = find_if(List.begin(), List.end(), 
+              [searchNum](const pair<int,int> & listElement) { return (listElement.first == searchNum);} );
+           if (it != List.end()) {
+               return searchNum;
+           }
+           else {
+               return 0;
+           }
+          };
+};
+
+auto Link::vFillList() ->m_linkIdList {
+    cout<<"Entered fill list"<<endl;
+    m_linkIdList List;
+    List.push_back(make_pair(2,100));
+    List.push_back(make_pair(5,200));
+    List.push_back(make_pair(3,600));
+    List.push_back(make_pair(1,800));
+    List.push_back(make_pair(4,900));
+    return List;
+}
+
+void Link::vPrintList(const m_linkIdList & List) {
+    cout<<"Entered Print list"<<endl;
+    cout<<"Size of list "<<List.size()<<endl;
+    for (const auto &num:List) {
+        cout<<"Linkid:"<<num.first<<"Tileid:"<<num.second<<endl;
+    }
+}
+
+auto Link::vSortList(m_linkIdList & List) ->m_linkIdList {
+    cout<<"Entered Sort list"<<endl;
+    sort(List.begin(), List.end());
+    return List;
+}
+
+void Link::vSearchList(int searchNum, m_linkIdList & List) {
+    cout<<"Entered search list"<<endl;
+    auto it = find_if(List.begin(), List.end(), 
+              [searchNum](const pair<int,int> & listElement) { return (listElement.first == searchNum);} );
+    if(it!= List.end()) {
+        cout<<"Element found"<<endl;
+    }
+    else {
+        cout<<"Element not found"<<endl;
+    }
+}
+
+bool Link::bSearchSort(shared_ptr<Link> uPlink, m_linkIdList & List) {
+          auto searchNum = uPlink->GetSearchElement();
+          bool bReturn = SortAndSearch(List, searchNum);
+          return bReturn;
+      }
+
+int main()
+{
+  shared_ptr<Link> UptrLink(new Link(7));
+  vector<pair<int,int>> List = UptrLink->vFillList();
+  UptrLink->vPrintList(List);
+  vector<pair<int,int>> ListSorted = UptrLink->vSortList(List);
+  UptrLink->vPrintList(ListSorted);
+  auto searchNum = UptrLink->GetSearchElement();
+  cout<<"Element to be searched "<<searchNum<<endl;
+  UptrLink->vSearchList(searchNum, ListSorted);
+  if(UptrLink->bSearchSort(UptrLink, List)){
+      cout<<"Element found through function"<<endl;
+  }
+  else {
+      cout<<"Element not found through function"<<endl;
+  }
+  
+  return 0;
+}
