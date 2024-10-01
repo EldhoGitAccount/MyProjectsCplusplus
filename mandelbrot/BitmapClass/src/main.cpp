@@ -1,10 +1,17 @@
+#include <string>
 #include <iostream>
-#include "BitmapInfoHeader.h"
-#include "BitmapFileHeader.h"
+#include "Bitmap.h"
 
 using namespace std;
+using namespace fractalimages;
+
 
 int main() {
-	cout << "Hello world" << endl;
+
+
+	Bitmap bitmap(800, 600);
+	bitmap.write("test.bmp");
+
+	cout << "Finished Creating a bitmap" << endl;
 	return 0;
 }
